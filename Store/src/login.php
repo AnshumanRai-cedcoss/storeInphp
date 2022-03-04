@@ -10,37 +10,28 @@ if (isset($_POST["submit"])) {
   // echo $email;
   $stm = DB::getInstance()->prepare("SELECT * FROM Users");
   $stm->execute();
-  foreach ($stm->fetchAll() as $k => $v) 
-  {
-    if ($v["email"] == $email && $v["password"] == $password) 
-    { 
-      if(!isset($_SESSION["userdata"]))
-      {
-      $_SESSION["userdata"] = array(
-        "fname" => $v["firstname"],
-        "lname" => $v["lastname"],
-        "email"=>$v["email"],
-        "password"=> $v["password"],
-        "username"=> $v["username"],
-        "role"=>$v["role"] );
+  foreach ($stm->fetchAll() as $k => $v) {
+    if ($v["email"] == $email && $v["password"] == $password) {
+      if (!isset($_SESSION["userdata"])) {
+        $_SESSION["userdata"] = array(
+          "fname" => $v["firstname"],
+          "lname" => $v["lastname"],
+          "email" => $v["email"],
+          "password" => $v["password"],
+          "username" => $v["username"],
+          "role" => $v["role"]
+        );
       }
-      if($v["role"] == "Admin"){
-           header("location:dashboard.php");
+      if ($v["role"] == "Admin") {
+        header("location:dashboard.php");
+      } else {
+        if ($v["status"] == "Approved") {
+          header("location:dashboardUser.php");
+        } else {
+          $msg = "You are not approved";
+        }
       }
-      else
-      {
-           if ($v["status"] == "Approved") 
-           {
-            header("location:dashboardUser.php");
-           } 
-           else 
-           {
-           $msg = "You are not approved";
-           }
-      } 
-  }
-    else 
-    {
+    } else {
       $msg = "Wrong email or password";
     }
   }

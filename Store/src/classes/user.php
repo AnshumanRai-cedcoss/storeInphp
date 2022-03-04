@@ -19,19 +19,15 @@ class user extends DB
     public function addUser()
     {
         // return $this->email;
-        try 
-        {
+        try {
             DB::getInstance()->exec("INSERT INTO Users(username,firstname,lastname,email,password) 
                              VALUES('$this->username','$this->firstname',' $this->lastname','$this->email','$this->password')");
             return "You will be approved shortly";
-        } 
-        catch (Exception $e) 
-        {
+        } catch (Exception $e) {
             return "Error : Already registered! Please sign in";
         }
     }
     public function update()
     {
-        
     }
 }
