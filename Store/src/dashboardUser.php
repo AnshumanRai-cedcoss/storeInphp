@@ -79,6 +79,9 @@ if (isset($_POST["submit"])) {
             </div>
             <button class="btn btn-danger" type="button"> Edit </button>
             <button id="update" style="display: none;" class="btn-primary" name="submit" type="submit">Update</button>
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="signout.php">Sign out</a>
+            </div>
         </form>
     </div>
 

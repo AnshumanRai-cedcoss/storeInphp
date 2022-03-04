@@ -1,3 +1,31 @@
+<?php
+session_start();
+include "classes/DB.php";
+include "classes/user.php";
+include "config.php";
+if (isset($_POST["submit"])) {
+  $val = $_POST["input"];
+  $stmt = DB::getInstance()->prepare("SELECT id,status FROM Users WHERE id = $val ");
+  $stmt->execute();
+  foreach ($stmt->fetchAll() as $k => $v) {
+    if ($v["status"] == "Pending") {
+      $stm = DB::getInstance()->prepare("UPDATE Users SET 
+      status = 'Approved' WHERE id = '$val'");
+      $stm->execute();
+    } elseif ($v["status"] == "Approved") {
+      $stm = DB::getInstance()->prepare("UPDATE Users SET 
+      status = 'Pending' WHERE id = '$val'");
+      $stm->execute();
+    }
+  }
+}
+if (isset($_POST["del"])) {
+  $did = $_POST["delete"];
+  $stm = DB::getInstance()->prepare("DELETE FROM Users WHERE id = '$did'");
+  $stm->execute();
+}
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -35,7 +63,8 @@
 
 <body>
 
-  <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <header class="navbar navbar-dark sticky-t
+          //  echo $did ;op bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Cedcoss Technology</a>
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -72,25 +101,11 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="users"></span>
-                Customers
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="bar-chart-2"></span>
-                Reports
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="layers"></span>
-                Integrations
-              </a>
-            </li>
-          </ul>
-        </div>
+              <a echo $val ;class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="layers"></span>
+                  Integrations
+                </a> echo $val ;
       </nav>
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -101,7 +116,7 @@
               <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
               <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+            <button type="button" class="btn btn-sm btn-style=" display:none;outline-secondary dropdown-toggle">
               <span data-feather="calendar"></span>
               This week
             </button>
@@ -110,40 +125,57 @@
 
         <h2>Section title</h2>
         <div class="table-responsive">
-          <table class="table table-striped table-sm">
+          <?php
+          $html = "";
+          $html .= '<table class="table table-striped table-sm">
             <thead>
               <tr>
-                <th scope="col">#</th>
-                <th scope="col">Header</th>
-                <th scope="col">Header</th>
-                <th scope="col">Header</th>
-                <th scope="col">Header</th>
+                <th scope="col">User id</th>
+                <th scope="col">UserName</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Status</th>
+                <th scope="col">Change Status</th>
+                <th scope="col">DELETE</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>1,001</td>
-                <td>random</td>
-                <td>data</td>
-                <td>placeholder</td>
-                <td>text</td>
-              </tr>
-              <tr>
-                <td>1,002</td>
-                <td>placeholder</td>
-                <td>irrelevant</td>
-                <td>visual</td>
-                <td>layout</td>
-              </tr>
-            </tbody>
-          </table>
+            <tbody>';
+          $stm = DB::getInstance()->prepare("SELECT * FROM Users WHERE NOT role = 'Admin'");
+          $stm->execute();
+
+          foreach ($stm->fetchAll() as $k => $v) {
+            $html .= '<tr>
+                   <td>' . $v["id"] . '</td>
+                   <td>' . $v["username"] . '</td>
+                   <td>' . $v["firstname"] . '</td>
+                   <td>' . $v["lastname"] . '</td>
+                   <td>' . $v["email"] . '</td>
+                   <td>' . $v["status"] . '</td>
+                   <td>
+                   <form action="" method = "POST">
+                   <input name="input" type="hidden" value=' . $v["id"] . '>
+                   <button name="submit" type="submit">Change</button> </form>
+                   </td>
+                   <td>
+                   <form action="" method = "POST">
+                   <input name="delete" type="hidden" value=' . $v["id"] . '>
+                   <button name="del" class="btn btn-danger" type="submit">DELETE</button></form>
+                   </td>
+                   </tr>';
+          }
+          $html .=  '</tbody>
+          </table>';
+          echo $html;
+          ?>
         </div>
+        <form action="addUser.php" method="post">
+          <button type="submit" class="btn-primary">Add New User</button>
+        </form>
       </main>
     </div>
   </div>
-
-
-  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="./assets/js/dashboard.js"></script>
 </body>

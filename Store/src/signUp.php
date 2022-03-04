@@ -82,9 +82,6 @@ if(isset($_POST["submit"])){
     <p class="mt-5 mb-3 text-muted">&copy; CEDCOSS Technologies</p>
     <p class="text-danger"> <?php echo $msg1 ?> </p>
   </form>
-</main>
-
-   
-    
+</main>  
   </body>
 </html>
