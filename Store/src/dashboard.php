@@ -83,7 +83,7 @@ if (isset($_POST["del"])) {
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="dashboard.html">
+              <a class="nav-link active" aria-current="page" href="dashboard.php">
                 <span data-feather="home"></span>
                 Dashboard
               </a>
@@ -95,17 +95,17 @@ if (isset($_POST["del"])) {
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="products.html">
+              <a class="nav-link" href="products.php">
                 <span data-feather="shopping-cart"></span>
                 Products
               </a>
             </li>
             <li class="nav-item">
-              <a echo $val ;class="nav-item">
+              <a class="nav-item">
                 <a class="nav-link" href="#">
                   <span data-feather="layers"></span>
                   Integrations
-                </a> echo $val ;
+                </a> 
       </nav>
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
@@ -170,7 +170,7 @@ if (isset($_POST["del"])) {
           ?>
         </div>
         <form action="addUser.php" method="post">
-          <button type="submit" class="btn-primary">Add New User</button>
+          <button type="submit"  class="btn-primary">Add New User</button>
         </form>
       </main>
     </div>
