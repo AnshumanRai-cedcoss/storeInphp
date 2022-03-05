@@ -38,7 +38,7 @@ if (isset($_POST["submit"])) {
         <div class="col-lg-4">
             <label for="email" class="p-5">
                 <h4>Username:</h4>
-                <h5 class="text-danger"><?php echo $_SESSION["userdata"]["username"] ?></h5< /label>
+                <h5 class="text-danger"><?php echo $_SESSION["userdata"]["username"] ?></h5</label>
         </div>
     </div>
     <h5 class="text-success p-5">Edit Your profile</h5>
