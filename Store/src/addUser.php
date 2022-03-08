@@ -49,23 +49,28 @@ if (isset($_POST["submit"])) {
         <form action="" method="post">
             <h1 class="h3 mb-3 fw-normal text-primary">User Details</h1>
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingUname" name="uName" placeholder="User Name" required>
+                <input type="text" class="form-control" id="floatingUname" name="uName" 
+                placeholder="User Name" required>
                 <label for="floatingPassword">User Name</label>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control" id="floatingFname" name="fName" placeholder="First Name" required>
+                <input type="text" class="form-control" id="floatingFname" name="fName" 
+                placeholder="First Name" required>
                 <label for="floatingPassword">First Name</label>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control m-0" id="floatingLName" name="lName" placeholder="Last Name" required>
+                <input type="text" class="form-control m-0" id="floatingLName" name="lName" 
+                placeholder="Last Name" required>
                 <label for="floatingPassword">Last Name</label>
             </div>
             <div class="form-floating">
-                <input type="email" class="form-control" id="floatingEmail" name="email" placeholder="name@example.com" required>
+                <input type="email" class="form-control" id="floatingEmail" name="email" 
+                placeholder="name@example.com" required>
                 <label for="floatingInput">Email address</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control m-0" id="floatingPassword" name="password" placeholder="Password" required>
+                <input type="password" class="form-control m-0" id="floatingPassword" 
+                name="password" placeholder="Password" required>
                 <label for="floatingPassword">Password</label>
             </div>
             <button class="w-100 btn btn-lg btn-success" name="submit" type="submit">Register User</button>
