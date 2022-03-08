@@ -1,16 +1,16 @@
 <?php
 include "classes/DB.php";
 include "classes/user.php";
-include "config.php"; 
+include "config.php";
 error_reporting(0);
-if(isset($_POST["submit"])){
+if (isset($_POST["submit"])) {
      $userName = $_POST["uName"] ;
      $fnamme = $_POST["fName"];
      $lName = $_POST["lName"];
      $email = $_POST["email"];
      $password = $_POST["password"];
     
-     $user = new user($userName,$fnamme,$lName,$email,$password);
+     $user = new user($userName, $fnamme, $lName, $email, $password);
      $msg1 = $user->addUser();
 }
 ?>
@@ -70,11 +70,13 @@ if(isset($_POST["submit"])){
       <label for="floatingInput">Email address</label>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control m-0" id="floatingPassword" name="password" placeholder="Password" required>
+      <input type="password" class="form-control m-0" id="floatingPassword" 
+      name="password" placeholder="Password" required>
       <label for="floatingPassword">Password</label>
     </div>
     <div class="form-floating">
-        <input type="password" class="form-control" id="floatingRePassword" name="rePassword" placeholder="RePassword" required>
+        <input type="password" class="form-control" id="floatingRePassword" 
+        name="rePassword" placeholder="RePassword" required>
         <label for="floatingPassword">Re-type New Password</label>
       </div>
     <button class="w-100 btn btn-lg btn-primary" name="submit" type="submit">Register User</button>

@@ -4,25 +4,19 @@ include "classes/DB.php";
 include "classes/user.php";
 include "config.php";
 if (isset($_POST["submit"])) {
-  $val = $_POST["input"];
-  $stmt = DB::getInstance()->prepare("SELECT id,status FROM Users WHERE id = $val ");
-  $stmt->execute();
-  foreach ($stmt->fetchAll() as $k => $v) {
-    if ($v["status"] == "Pending") {
-      $stm = DB::getInstance()->prepare("UPDATE Users SET 
-      status = 'Approved' WHERE id = '$val'");
-      $stm->execute();
-    } elseif ($v["status"] == "Approved") {
-      $stm = DB::getInstance()->prepare("UPDATE Users SET 
-      status = 'Pending' WHERE id = '$val'");
-      $stm->execute();
-    }
-  }
-}
-if (isset($_POST["del"])) {
-  $did = $_POST["delete"];
-  $stm = DB::getInstance()->prepare("DELETE FROM Users WHERE id = '$did'");
-  $stm->execute();
+    $_SESSION["userdata"]["fname"] = $_POST["fname"];
+    $_SESSION["userdata"]["lname"] = $_POST["lname"];
+    $_SESSION["userdata"]["password"] = $_POST["password"];
+    $firstname =  $_SESSION["userdata"]["fname"];
+    $lastname =  $_SESSION["userdata"]["lname"];
+    $pass =  $_SESSION["userdata"]["password"];
+    $umail = $_SESSION["userdata"]["email"];
+    $stm = DB::getInstance()->prepare("UPDATE Users SET 
+    firstname = '$firstname',
+ lastname = '$lastname' ,
+ password = '$pass' 
+ where email = '$umail'");
+    $stm->execute();
 }
 
 ?>
@@ -66,7 +60,9 @@ if (isset($_POST["del"])) {
   <header class="navbar navbar-dark sticky-t
           //  echo $did ;op bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Cedcoss Technology</a>
-    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler position-absolute d-md-none collapsed" 
+    type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" 
+    aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
@@ -109,7 +105,8 @@ if (isset($_POST["del"])) {
       </nav>
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center
+         pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2">Dashboard</h1>
           <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
@@ -125,49 +122,49 @@ if (isset($_POST["del"])) {
 
         <h2>Section title</h2>
         <div class="table-responsive">
-          <?php
-          $html = "";
-          $html .= '<table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th scope="col">User id</th>
-                <th scope="col">UserName</th>
-                <th scope="col">First Name</th>
-                <th scope="col">Last Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Status</th>
-                <th scope="col">Change Status</th>
-                <th scope="col">DELETE</th>
-              </tr>
-            </thead>
-            <tbody>';
-          $stm = DB::getInstance()->prepare("SELECT * FROM Users WHERE NOT role = 'Admin'");
-          $stm->execute();
+            <?php
+              $html = "";
+              $html .= '<table class="table table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col">User id</th>
+                    <th scope="col">UserName</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Change Status</th>
+                    <th scope="col">DELETE</th>
+                  </tr>
+                </thead>
+                <tbody>';
+              $stm = DB::getInstance()->prepare("SELECT * FROM Users WHERE NOT role = 'Admin'");
+              $stm->execute();
 
-          foreach ($stm->fetchAll() as $k => $v) {
-            $html .= '<tr>
-                   <td>' . $v["id"] . '</td>
-                   <td>' . $v["username"] . '</td>
-                   <td>' . $v["firstname"] . '</td>
-                   <td>' . $v["lastname"] . '</td>
-                   <td>' . $v["email"] . '</td>
-                   <td>' . $v["status"] . '</td>
-                   <td>
-                   <form action="" method = "POST">
-                   <input name="input" type="hidden" value=' . $v["id"] . '>
-                   <button name="submit" type="submit">Change</button> </form>
-                   </td>
-                   <td>
-                   <form action="" method = "POST">
-                   <input name="delete" type="hidden" value=' . $v["id"] . '>
-                   <button name="del" class="btn btn-danger" type="submit">DELETE</button></form>
-                   </td>
-                   </tr>';
-          }
-          $html .=  '</tbody>
-          </table>';
-          echo $html;
-          ?>
+            foreach ($stm->fetchAll() as $k => $v) {
+                  $html .= '<tr>
+                        <td>' . $v["id"] . '</td>
+                        <td>' . $v["username"] . '</td>
+                        <td>' . $v["firstname"] . '</td>
+                        <td>' . $v["lastname"] . '</td>
+                        <td>' . $v["email"] . '</td>
+                        <td>' . $v["status"] . '</td>
+                        <td>
+                        <form action="" method = "POST">
+                        <input name="input" type="hidden" value=' . $v["id"] . '>
+                        <button name="submit" type="submit">Change</button> </form>
+                        </td>
+                        <td>
+                        <form action="" method = "POST">
+                        <input name="delete" type="hidden" value=' . $v["id"] . '>
+                        <button name="del" class="btn btn-danger" type="submit">DELETE</button></form>
+                        </td>
+                        </tr>';
+            }
+                $html .=  '</tbody>
+                </table>';
+                echo $html;
+                ?>
         </div>
         <form action="addUser.php" method="post">
           <button type="submit"  class="btn-primary">Add New User</button>
