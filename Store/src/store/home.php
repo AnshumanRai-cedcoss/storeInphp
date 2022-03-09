@@ -24,6 +24,44 @@ if (isset($_POST["inputBtn"])) {
     $stm = App\DB::getInstance()->prepare("SELECT * FROM products");
     $stm->execute();
 }
+$limit = isset($_SESSION['records-limit']) ? $_SESSION['records-limit'] : 5;
+// Current pagination page number
+$page = (isset($_GET['page']) && is_numeric($_GET['page']) ) ? $_GET['page'] : 1;
+// Offset
+$paginationStart = ($page - 1) * $limit;
+// Limit query
+$authors = App\DB::getInstance()->prepare("SELECT * FROM Users WHERE role ='User' LIMIT $paginationStart, $limit");
+$authors->execute();
+$authors->fetchAll();
+                
+if (isset($_POST['records-limit'])) {
+      $_SESSION['records-limit'] = $_POST['records-limit'];
+}
+  
+  $limit = isset($_SESSION['records-limit']) ? $_SESSION['records-limit'] : 3;
+  $page = (isset($_GET['page']) && is_numeric($_GET['page']) ) ? $_GET['page'] : 1;
+  $paginationStart = ($page - 1) * $limit;
+  $authors = App\DB::getInstance()->prepare("SELECT * FROM products LIMIT $paginationStart, $limit");
+  $authors->execute();
+//   $authors = $authors->fetchAll();
+  // Get total records
+  $sql = App\DB::getInstance()->prepare("SELECT count(*) as id FROM products");
+  $sql->execute();
+  $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+//  print_r($sql->fetchAll()) ;
+$allRecrods = 0;
+foreach ($sql->fetchAll() as $k => $v) {
+    $allRecrods = $v["id"];
+}
+  // echo $allRecrods;
+//    = $sql[0]['id']
+  
+  // Calculate total pages
+  $totoalPages = ceil($allRecrods / $limit);
+  // echo " Total Pages are :".$totoalPages ;
+  // Prev + Next
+  $prev = $page - 1;
+  $next = $page + 1;
 
 ?>
 <!doctype html>
@@ -36,8 +74,7 @@ if (isset($_POST["inputBtn"])) {
     
 
     <!-- Bootstrap core CSS -->
-    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftj/DbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
     <style>
@@ -143,7 +180,7 @@ if (isset($_POST["inputBtn"])) {
     <div class="container">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <?php
-                display($stm);
+                display($authors);
                 function display($stm)
                 {
                     $html="";
@@ -177,19 +214,39 @@ if (isset($_POST["inputBtn"])) {
                 }
                 
                 ?>
-          <div class="col">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                  <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                  <li class="page-item"><a class="page-link" href="#">1</a></li>
-                  <li class="page-item"><a class="page-link" href="#">2</a></li>
-                  <li class="page-item"><a class="page-link" href="#">3</a></li>
-                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                </ul>
-              </nav>
-          </div>
+</div>
+<br>
+                 <!-- Pagination --> 
+        <nav aria-label="Page navigation example mt-5">
+            <ul class="pagination justify-content-center">
+                <li <?php if ($page <= 1) {
+                    echo 'hidden';
+} ?>>
+                    <a class="page-link"
+                        href="<?php if ($page <= 1) {
+                            echo '#';
+} else {
+    echo "?page=" . $prev;
+} ?>">Previous</a>
+                </li>
+                <?php for ($i = 1; $i <= $totoalPages; $i++)
+                :
+                    ?>
+                <li class="page-item <?php if ($page == $i) {
+                    echo 'active';
+} ?>">
+                    <a class="page-link" href="?page=<?php echo $i ; ?>"> <?php  echo $i ; ?> </a>
+                </li>
+                <?php endfor; ?>
+                <li <?php if($page >= $totoalPages) { echo 'hidden'; } ?>>
+                    <a class="page-link"
+                        href="<?php if($page >= $totoalPages){ echo '#'; } else {echo "?page=". $next; } ?>">Next</a>
+                </li>
+            </ul>
+        </nav>
+          
         
-      </div>
+      
     </div>
   </div>
 
@@ -205,7 +262,7 @@ if (isset($_POST["inputBtn"])) {
 </footer>
 
 
-    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../node_modules//bootstrap//dist//js//bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="../assets/js/cart.js"></script>  
   </body>

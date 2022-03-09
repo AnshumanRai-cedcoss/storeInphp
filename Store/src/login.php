@@ -1,14 +1,15 @@
 <?php
 session_start();
+include "config.php";
 include "classes/DB.php";
 include "classes/user.php";
-include "config.php";
+
 $msg = "";
 if (isset($_POST["submit"])) {
     $email =   $_POST["email"];
     $password =   $_POST["password"];
   // echo   $email;
-    $stm = DB::getInstance()->prepare("SELECT * FROM Users");
+    $stm = App\DB::getInstance()->prepare("SELECT * FROM Users");
     $stm->execute();
     foreach ($stm->fetchAll() as $k => $v) {
         if ($v["email"] == $email && $v["password"] == $password) {

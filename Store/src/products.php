@@ -7,7 +7,7 @@ include "classes/product.php";
 
 if (isset($_POST["del"])) {
     $did = $_POST["delete"];
-    $stm = DB::getInstance()->prepare("DELETE FROM products WHERE product_id = '$did'");
+    $stm = App\DB::getInstance()->prepare("DELETE FROM products WHERE product_id = '$did'");
     $stm->execute();
 }
 if (isset($_POST["submit"])) {
@@ -16,14 +16,14 @@ if (isset($_POST["submit"])) {
     $listPrice = $_POST["listPrice"];
     $salePrice = $_POST["salePrice"];
     $pcat = $_POST["cate"];
-    $stm = DB::getInstance()->prepare("SELECT * FROM category");
+    $stm = App\DB::getInstance()->prepare("SELECT * FROM category");
     $stm->execute();
     foreach ($stm->fetchAll() as $k => $v) {
         if ($v["category_name"] == $pcat) {
             $pid = $v["category_id"];
         }
     }
-    $product = new product($productname, $productimage, $salePrice, $listPrice, $pid);
+    $product = new App\Product($productname, $productimage, $salePrice, $listPrice, $pid);
     $msg1 = $product->addProduct();
 }
 ?>
@@ -90,19 +90,19 @@ if (isset($_POST["submit"])) {
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="dashboard.php">
+            <a class="nav-link" href="dashboard.php">
                 <span data-feather="home"></span>
                 Dashboard
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="orderAdmin.php">
                 <span data-feather="file"></span>
                 Orders
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+            <a class="nav-link active" aria-current="page" href="">
                 <span data-feather="shopping-cart"></span>
                 Products
               </a>
@@ -208,7 +208,7 @@ if (isset($_POST["submit"])) {
                 </tr>
               </thead>
               <tbody>';
-            $stm = DB::getInstance()->prepare("SELECT * FROM products INNER JOIN category 
+            $stm = App\DB::getInstance()->prepare("SELECT * FROM products INNER JOIN category 
             WHERE products.category_id = category.category_id ");
             $stm->execute();
 

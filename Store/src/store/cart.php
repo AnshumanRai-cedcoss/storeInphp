@@ -7,7 +7,7 @@ if (!isset($_SESSION["cart"])) {
 }
 if (isset($_POST["cartBtn"])) {
     $proId = $_POST["id"];
-    $stm = DB::getInstance()->prepare("SELECT * FROM products  where product_id =   $proId");
+    $stm = App\DB::getInstance()->prepare("SELECT * FROM products  where product_id =   $proId");
     $stm->execute();
     $res =   $stm->setFetchMode(PDO::FETCH_ASSOC);
     if (!isPresent($proId)) {
@@ -47,8 +47,7 @@ function isPresent($id)
 
 
   <!-- Bootstrap core CSS -->
-  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" 
-  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
   <style>
@@ -167,9 +166,9 @@ function isPresent($id)
 
 
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="./assets/js/form-validation.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="../assets/js/cart.js"></script>
+  <script src="./assets/js/form-validation.js"></script>
 </body>
 
 </html>
