@@ -9,7 +9,7 @@ if (isset($_POST["submit"])) {
     $lName = $_POST["lName"];
     $email = $_POST["email"];
     $password = $_POST["password"];
-    $user = new user($userName, $fnamme, $lName, $email, $password);
+    $user = new App\user($userName, $fnamme, $lName, $email, $password);
     $msg1 = $user->addUser();
 }
 ?>

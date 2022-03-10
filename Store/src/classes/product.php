@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-class product extends DB
+class Product extends DB
 {
     
     public $productname;

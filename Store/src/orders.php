@@ -39,7 +39,7 @@ $res =   $stm->setFetchMode(PDO::FETCH_ASSOC);
                         ?> <p><b>Product Name: </b> <?php echo $arr[$i]->name;?></p> 
                          <p><b>Product Price: </b> <?php echo $arr[$i]->price;?></p> 
                         <?php
-} ?> <p>Total amount:</p>   <?php echo $v["total_amount"] ?>
+} ?> <p>Total amount: <?php echo $v["total_amount"] ?></p>   
                    
                </div>
                 

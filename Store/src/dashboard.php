@@ -1,9 +1,21 @@
 <?php
 session_start();
+include "config.php";
 include "classes/DB.php";
 include "classes/user.php";
-include "config.php";
+
 if (isset($_POST["submit"])) {
+     $id = $_POST["input"];
+     $status = $_POST["status"];
+     echo $id ;
+     echo $status ;
+    if ($status == "Pending") {
+        $stm =  App\DB::getInstance()->prepare("UPDATE Users set status = 'Approved' WHERE id = $id");
+        $stm->execute();
+    } else {
+        $stm =  App\DB::getInstance()->prepare("UPDATE Users set status = 'Pending' WHERE id = $id");
+        $stm->execute();
+    }
     $_SESSION["userdata"]["fname"] = $_POST["fname"];
     $_SESSION["userdata"]["lname"] = $_POST["lname"];
     $_SESSION["userdata"]["password"] = $_POST["password"];
@@ -11,13 +23,58 @@ if (isset($_POST["submit"])) {
     $lastname =  $_SESSION["userdata"]["lname"];
     $pass =  $_SESSION["userdata"]["password"];
     $umail = $_SESSION["userdata"]["email"];
-    $stm = DB::getInstance()->prepare("UPDATE Users SET 
+    $stm = App\DB::getInstance()->prepare("UPDATE Users SET 
     firstname = '$firstname',
  lastname = '$lastname' ,
  password = '$pass' 
  where email = '$umail'");
     $stm->execute();
 }
+if (isset($_POST["del"])) {
+     $id = $_POST["delete"];
+     $stm =  App\DB::getInstance()->prepare("DELETE FROM Users WHERE id = $id");
+     $stm->execute();
+}
+$limit = isset($_SESSION['records-limit']) ? $_SESSION['records-limit'] : 5;
+// Current pagination page number
+$page = (isset($_GET['page']) && is_numeric($_GET['page']) ) ? $_GET['page'] : 1;
+// Offset
+$paginationStart = ($page - 1) * $limit;
+// Limit query
+$authors = App\DB::getInstance()->prepare("SELECT * FROM Users WHERE role ='User' LIMIT $paginationStart, $limit");
+$authors->execute();
+$authors->fetchAll();
+                
+if (isset($_POST['records-limit'])) {
+      $_SESSION['records-limit'] = $_POST['records-limit'];
+}
+  
+  $limit = isset($_SESSION['records-limit']) ? $_SESSION['records-limit'] : 5;
+  $page = (isset($_GET['page']) && is_numeric($_GET['page']) ) ? $_GET['page'] : 1;
+  $paginationStart = ($page - 1) * $limit;
+  $authors = App\DB::getInstance()->prepare("SELECT * FROM Users where role = 'User'LIMIT $paginationStart, $limit");
+  $authors->execute();
+//   $authors = $authors->fetchAll();
+  // Get total records
+  $sql = App\DB::getInstance()->prepare("SELECT count(id) AS id FROM Users where role = 'User'");
+  $sql->execute();
+  $result = $sql->setFetchMode(PDO::FETCH_ASSOC);
+//  print_r($sql->fetchAll()) ;
+$allRecrods = 0;
+foreach ($sql->fetchAll() as $k => $v) {
+    $allRecrods = $v["id"];
+}
+  echo $allRecrods;
+//    = $sql[0]['id']
+  
+  // Calculate total pages
+  $totoalPages = ceil($allRecrods / $limit);
+  echo " Total Pages are :".$totoalPages ;
+  // Prev + Next
+  $prev = $page - 1;
+  $next = $page + 1;
+
+
 
 ?>
 <!doctype html>
@@ -79,13 +136,13 @@ if (isset($_POST["submit"])) {
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="dashboard.php">
+              <a class="nav-link active" aria-current="page" href="">
                 <span data-feather="home"></span>
                 Dashboard
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="orderAdmin.php">
                 <span data-feather="file"></span>
                 Orders
               </a>
@@ -120,8 +177,9 @@ if (isset($_POST["submit"])) {
           </div>
         </div>
 
-        <h2>Section title</h2>
+        <h2>Users</h2>
         <div class="table-responsive">
+            <!-- Datatable -->
             <?php
               $html = "";
               $html .= '<table class="table table-striped table-sm">
@@ -138,10 +196,9 @@ if (isset($_POST["submit"])) {
                   </tr>
                 </thead>
                 <tbody>';
-              $stm = DB::getInstance()->prepare("SELECT * FROM Users WHERE NOT role = 'Admin'");
-              $stm->execute();
+          
 
-            foreach ($stm->fetchAll() as $k => $v) {
+            foreach ($authors->fetchAll() as $k => $v) {
                   $html .= '<tr>
                         <td>' . $v["id"] . '</td>
                         <td>' . $v["username"] . '</td>
@@ -151,6 +208,7 @@ if (isset($_POST["submit"])) {
                         <td>' . $v["status"] . '</td>
                         <td>
                         <form action="" method = "POST">
+                        <input name="status" type="hidden" value=' . $v["status"] . '>
                         <input name="input" type="hidden" value=' . $v["id"] . '>
                         <button name="submit" type="submit">Change</button> </form>
                         </td>
@@ -165,6 +223,41 @@ if (isset($_POST["submit"])) {
                 </table>';
                 echo $html;
                 ?>
+        <!-- Pagination -->
+        <nav aria-label="Page navigation example mt-5">
+            <ul class="pagination justify-content-center">
+                <li <?php if ($page <= 1) {
+                    echo 'hidden';
+} ?>>
+                    <a class="page-link"
+                        href="<?php if ($page <= 1) {
+                            echo '#';
+} else {
+    echo "?page=" . $prev;
+} ?>">Previous</a>
+                </li>
+                <?php for ($i = 1; $i <= $totoalPages; $i++) :
+                    ?>
+                <li class="page-item <?php if ($page == $i) {
+                    echo 'active';
+} ?>">
+                    <a class="page-link" href="dashboard.php?page=<?php echo $i ; ?>"> <?php  echo $i ; ?> </a>
+                </li>
+                <?php
+endfor; ?>
+                <li <?php if ($page >= $totoalPages) {
+                    echo 'hidden';
+} ?>>
+                    <a class="page-link"
+                        href="<?php if ($page >= $totoalPages) {
+                            echo '#';
+} else {
+    echo "?page=". $next;
+} ?>">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
         </div>
         <form action="addUser.php" method="post">
           <button type="submit"  class="btn-primary">Add New User</button>

@@ -1,4 +1,5 @@
 <?php
+ namespace App ;
 
 class user extends DB
 {
@@ -21,9 +22,10 @@ class user extends DB
         // return $this->email;
         try {
             DB::getInstance()->exec("INSERT INTO Users(username,firstname,lastname,email,password,role,status) 
-                             VALUES('$this->username','$this->firstname',' $this->lastname','$this->email','$this->password','User','Pending')");
+                             VALUES('$this->username','$this->firstname',' 
+                             $this->lastname','$this->email','$this->password','User','Pending')");
             return "Waiting to be approved";
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return "Error : Already registered! Please sign in";
         }
     }
