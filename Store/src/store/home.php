@@ -197,14 +197,14 @@ foreach ($sql->fetchAll() as $k => $v) {
                                 <p><strong>'.$v["product_list_price"].'</strong>&nbsp;<del>
                                   <small class="link-danger">'. $v["product_sale_price"].'</small></del></p>
                                   <form action="../store/single-product.php" method="post">
-                                    <input type="hidden" name="pro_id" value="'.$v["product_id"].'">
+                                  <input type="hidden" name="pro_id" value="'.$v["product_id"].'">
                                 <button class="btn btn-secondary" type="submit" name="submit">View Details</button>
                                 </form>
                                 <form action="cart.php" method="post">
                                 <input type="hidden" name="id" id="pro_id" value="'.$v["product_id"].'">
                                 <input class="btn btn-primary" id="add-to-cart" type="submit" 
                                 name="cartBtn" value="Add to Cart">
-                                  </form>
+                                </form>
                               </div>
                             </div>
                           </div>
@@ -229,18 +229,24 @@ foreach ($sql->fetchAll() as $k => $v) {
     echo "?page=" . $prev;
 } ?>">Previous</a>
                 </li>
-                <?php for ($i = 1; $i <= $totoalPages; $i++)
-                :
+                <?php for ($i = 1; $i <= $totoalPages; $i++) :
                     ?>
                 <li class="page-item <?php if ($page == $i) {
                     echo 'active';
 } ?>">
                     <a class="page-link" href="?page=<?php echo $i ; ?>"> <?php  echo $i ; ?> </a>
                 </li>
-                <?php endfor; ?>
-                <li <?php if($page >= $totoalPages) { echo 'hidden'; } ?>>
+                <?php
+endfor; ?>
+                <li <?php if ($page >= $totoalPages) {
+                    echo 'hidden';
+} ?>>
                     <a class="page-link"
-                        href="<?php if($page >= $totoalPages){ echo '#'; } else {echo "?page=". $next; } ?>">Next</a>
+                        href="<?php if ($page >= $totoalPages) {
+                            echo '#';
+} else {
+    echo "?page=". $next;
+} ?>">Next</a>
                 </li>
             </ul>
         </nav>

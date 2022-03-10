@@ -236,18 +236,24 @@ foreach ($sql->fetchAll() as $k => $v) {
     echo "?page=" . $prev;
 } ?>">Previous</a>
                 </li>
-                <?php for ($i = 1; $i <= $totoalPages; $i++)
-                :
+                <?php for ($i = 1; $i <= $totoalPages; $i++) :
                     ?>
                 <li class="page-item <?php if ($page == $i) {
                     echo 'active';
 } ?>">
                     <a class="page-link" href="dashboard.php?page=<?php echo $i ; ?>"> <?php  echo $i ; ?> </a>
                 </li>
-                <?php endfor; ?>
-                <li <?php if($page >= $totoalPages) { echo 'hidden'; } ?>>
+                <?php
+endfor; ?>
+                <li <?php if ($page >= $totoalPages) {
+                    echo 'hidden';
+} ?>>
                     <a class="page-link"
-                        href="<?php if($page >= $totoalPages){ echo '#'; } else {echo "?page=". $next; } ?>">Next</a>
+                        href="<?php if ($page >= $totoalPages) {
+                            echo '#';
+} else {
+    echo "?page=". $next;
+} ?>">Next</a>
                 </li>
             </ul>
         </nav>
